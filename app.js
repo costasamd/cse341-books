@@ -16,6 +16,8 @@ app.get('/', (req, res) =>{
     return res.status(200).json({message: 'Server is running'});
 });
 
+// Define a route to retrieve all trails from the database
+
 app.get('/trails', async (req, res) => {
     try {
         const trails = await getDb()

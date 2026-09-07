@@ -1,5 +1,5 @@
 import app from './app.js';
-import {connectToDb} from './src/db/connect.js';
+import { connectToDb } from './src/db/connect.js';
 
 // Define the port number for the server to listen on
 
