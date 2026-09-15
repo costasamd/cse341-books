@@ -34,7 +34,7 @@ const createBookHandler = async (req, res) => {
 
         const { id, authorId, title, publicationDate} = req.body;
 
-        if(!id || !authorId || title || publicationDate === undefined) {
+        if(!id || !authorId || !title || publicationDate === undefined) {
             return res.status(400).json({message: 'id, authorId, title and publication date are required'});
         }
 
