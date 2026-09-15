@@ -1,4 +1,4 @@
-import { getAllAuthors } from '../models/authors.js';
+import { getAllAuthors, getAuthorById, createAuthor, updateAuthor, deleteAuthor, authorHasBooks  } from '../models/authors.js';
 
 const getAuthorsHandler = async (req, res) => {
     try{
@@ -11,9 +11,6 @@ const getAuthorsHandler = async (req, res) => {
 
     }
 };
-
-
-import { getAuthorById, createAuthor, updateAuthor, deleteAuthor, authorHasBooks } from '../models/authors.js';
 
 const getAuthorByIdHandler = async (req, res) => {
     try {

@@ -1,5 +1,7 @@
 import express from 'express';
-import { getBooksHandler, getBookByIdHandler } from './controller/books.js';
+import { getBooksHandler, getBookByIdHandler, createBookHandler,
+    updateBookHandler,
+    deleteBookHandler } from './controller/books.js';
 import { getAuthorsHandler, getAuthorByIdHandler,
     createAuthorHandler,
     updateAuthorHandler,
@@ -45,6 +47,111 @@ router.get('/books', getBooksHandler);
  *         description: Internal server error
  */
 router.get('/books/:id', getBookByIdHandler);
+
+
+/**
+ * @openapi
+ * /books:
+ *   post:
+ *     summary: Create a new book
+ *     tags:
+ *      - Books
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *               authorId:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               publicationDate:
+ *                 type: string
+ *                 format: date
+ *             example:
+ *               id: b12
+ *               authorId: a4
+ *               title: Example Title
+ *               publicationDate: "1985-06-01"
+ *     responses:
+ *       201:
+ *         description: Book created successfully
+ *       400:
+ *         description: Missing required field or id already exists
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/books', createBookHandler);
+
+/**
+ * @openapi
+ * /books/{id}:
+ *   put:
+ *     summary: Update an existing book
+ *     tags:
+ *      - Books
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               authorId:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               publicationDate:
+ *                 type: string
+ *                 format: date
+ *             example:
+ *               authorId: a4
+ *               title: Updated Title
+ *               publicationDate: "1990-03-15"
+ *     responses:
+ *       200:
+ *         description: Book updated successfully
+ *       400:
+ *         description: Missing required field
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Internal server error
+ */
+router.put('/books/:id', updateBookHandler);
+
+/**
+ * @openapi
+ * /books/{id}:
+ *   delete:
+ *     summary: Delete a book
+ *     tags:
+ *      - Books
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: Book deleted successfully
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Internal server error
+ */
+router.delete('/books/:id', deleteBookHandler);
 
 /**
  * @openapi

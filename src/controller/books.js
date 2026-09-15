@@ -1,4 +1,4 @@
-import {getAllBooks, getBookById } from '../models/books.js';
+import {getAllBooks, getBookById, createBook, updateBook, deleteBook } from '../models/books.js';
 
 const getBooksHandler = async (req, res) => {
     try {
@@ -29,4 +29,73 @@ const getBookByIdHandler = async (req, res) => {
     }
 }
 
-export { getBooksHandler, getBookByIdHandler };
+const createBookHandler = async (req, res) => {
+    try {
+
+        const { id, authorId, title, publicationDate} = req.body;
+
+        if(!id || !authorId || title || publicationDate === undefined) {
+            return res.status(400).json({message: 'id, authorId, title and publication date are required'});
+        }
+
+        const existingBook = await getBookById(id);
+        if(existingBook) {
+            return res.status(400).json({message: 'Book id already exists'});
+        }
+
+        const newBook = {id, authorId, title, publicationDate};
+        await createBook(newBook);
+
+        return res.status(201).json(newBook);
+
+    }catch (error) {
+        console.error('POST /books failed:', error);
+        return res.status(500).json({message: 'internal server error'});
+    }
+}
+
+const updateBookHandler = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { authorId, title, publicationDate } = req.body;
+
+        if(!authorId || !title || publicationDate === undefined) {
+            return res.status(400).json({message: 'authorId, title and publication date are required'});
+        }
+
+        const existingBook = await getBookById(id);
+        if(!existingBook) {
+            return res.status(404).json({message: 'Book not found'});
+        }
+
+        await updateBook(id, { authorId, title, publicationDate });
+        const updatedBook = await getBookById(id);
+
+        return res.status(200).json(updatedBook);
+
+    }catch (error) {
+        console.error('PUT /books/:id failed:', error);
+        return res.status(500).json({message: 'internal server error'});
+    }
+}
+
+const deleteBookHandler = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const existingBook = await getBookById(id);
+        if(!existingBook) {
+            return res.status(404).json({message: 'Book not found'});
+        }
+
+        await deleteBook(id);
+
+        return res.status(204).send();
+
+    }catch (error) {
+        console.error('DELETE /books/:id failed:', error);
+        return res.status(500).json({message: 'internal server error'});
+    }
+}
+
+export { getBooksHandler, getBookByIdHandler, createBookHandler, updateBookHandler, deleteBookHandler };
